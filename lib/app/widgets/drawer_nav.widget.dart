@@ -15,10 +15,13 @@ class _DrawerNavState extends State<DrawerNav> {
   int _expandedIndex = -1; // Keep for existing accordion if uncommented
   late List<ExpansibleController> _tileControllers; // Keep for existing accordion
 
-  // Controller for the new language ExpansionTile
+  // Controller for the language ExpansionTile
   final ExpansionTileController _languageController = ExpansionTileController();
+  // Controller for the new Content ExpansionTile
+  final ExpansionTileController _contentItemsController = ExpansionTileController();
 
   final List<String> _languageItems = ['Español'/*, 'Français', 'Русский', '中文', 'العربية'*/];
+  final List<String> _contentItems = ["Scatter plot", "Clustered column chart", "Area chart"];
 
   @override
   void initState() {
@@ -30,10 +33,12 @@ class _DrawerNavState extends State<DrawerNav> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final bool isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     final textTheme = Theme.of(context).textTheme;
+    
+    // Style for the Drawer Header
     TextStyle? baseTitleLargeStyle = textTheme.titleLarge;
-    TextStyle finalTextStyle = baseTitleLargeStyle?.copyWith(
+    TextStyle headerTextStyle = baseTitleLargeStyle?.copyWith(
       color: Colors.white,
       fontFamily: 'ContrailOne',
     ) ??
@@ -42,6 +47,13 @@ class _DrawerNavState extends State<DrawerNav> {
           fontFamily: 'ContrailOne',
           fontSize: 22,
         );
+
+    // Common color and text style for drawer items
+    final Color itemColor = isDarkTheme ? Colors.white : Colors.black;
+    final TextStyle? baseItemTextStyle = textTheme.titleMedium;
+    final TextStyle itemTextStyle = baseItemTextStyle?.copyWith(color: itemColor) ?? 
+                                   TextStyle(color: itemColor, fontSize: 16, fontWeight: FontWeight.w500);
+    final TextStyle subItemTextStyle = itemTextStyle.copyWith(fontWeight: FontWeight.normal);
 
     return Drawer(
       child: ListView(
@@ -52,98 +64,83 @@ class _DrawerNavState extends State<DrawerNav> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: isDark
+                colors: isDarkTheme
                     ? [Colors.blue.shade900, Colors.blue.shade700]
                     : [Colors.lightBlue.shade900, Colors.cyanAccent.shade700],
               ),
             ),
             padding: const EdgeInsets.all(16.0),
-            child: Text("IR Analytics", style: finalTextStyle),
+            child: Text("IR Analytics", style: headerTextStyle),
           ),
-          // Static menu item
+
+          // Content button
           ListTile(
-            title: const Text("Content"),
+            leading: Icon(Icons.menu_book, color: itemColor),
+            title: Text("Content", style: itemTextStyle),
             onTap: () {
-              Navigator.of(context).pushNamed('/content');
+              print('Content button tapped');
+              Navigator.pop(context); // Close drawer
+            },
+          ),
+
+          // Access button
+          ListTile(
+            leading: Icon(Icons.person, color: itemColor),
+            title: Text("Access", style: itemTextStyle),
+            onTap: () {
+              print('Access button tapped');
+              Navigator.pop(context); // Close drawer
             },
           ),
 
           // Language Popover
           ExpansionTile(
             controller: _languageController,
-            leading: const Icon(Icons.language_sharp),
-            title: const Text('English'),
+            leading: Icon(Icons.language_sharp, color: itemColor),
+            title: Text('English', style: itemTextStyle),
+            iconColor: itemColor,
+            collapsedIconColor: itemColor,
             children: _languageItems.map((String item) {
               return ListTile(
-                contentPadding: const EdgeInsets.only(left: 53.0), // Added left padding to ListTile
-                title: Text(item),
+                contentPadding: const EdgeInsets.only(left: 53.0),
+                title: Text(item, style: subItemTextStyle),
                 onTap: () {
-                  // Placeholder: Implement language change logic
                   print('Selected language: $item');
-                  _languageController.collapse(); // Collapse after selection
-                  Navigator.pop(context); // Close drawer
-                  // Potentially: ref.read(languageProvider.notifier).setLanguage(item);
+                  _languageController.collapse(); 
+                  Navigator.pop(context); 
                 },
               );
             }).toList(),
           ),
 
-          /*
-          // Accordion menu sections (existing commented out code)
-          ...popoverConfigurations.asMap().entries.map((entry) {
-            final int index = entry.key;
-            final String sectionLabel = entry.value['label'] as String;
-            final List<String> items = entry.value['items'] as List<String>;
-            return ExpansionTile(
-              controller: _tileControllers[index], // Uses _tileControllers
-              initiallyExpanded: index == _expandedIndex, // Uses _expandedIndex
-              title: Text(sectionLabel),
-              onExpansionChanged: (expanded) {
-                setState(() {
-                  if (expanded) {
-                    if (_expandedIndex != -1 && _expandedIndex != index) {
-                      _tileControllers[_expandedIndex].collapse();
-                    }
-                    _expandedIndex = index;
-                  } else if (_expandedIndex == index) {
-                    _expandedIndex = -1;
-                  }
-                });
-              },
-              children: items.map((item) {
-                final path = '/${sectionLabel.toLowerCase().replaceAll(" ", "-")}'
-                    '/${item.toLowerCase().replaceAll(" ", "-")}';
-                return ListTile(
-                  title: Text(item),
-                  onTap: () {
-                    Navigator.pop(context);
-                    // routerDelegate.go(path); // Ensure routerDelegate is available if uncommented
-                  },
-                );
-              }).toList(),
-            );
-          }),*/
-
-          // const Divider(),
-
           // Theme toggle button at the very bottom
           Consumer(
             builder: (context, ref, _) {
               final themeModeVM = ref.watch(themeModeProvider);
-              final bool isDarkNow = Theme.of(context).brightness == Brightness.dark;
-              final Color buttonColor = isDarkNow ? Colors.white : Colors.black;
+              // itemColor is already defined above and matches the theme
 
-              return Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  tooltip: 'Cambiar tema (claro/oscuro)',
-                  onPressed: themeModeVM.toggleThemeMode,
-                  icon: Icon(
-                    themeModeVM.themeMode == ThemeMode.dark
-                        ? Icons.light_mode
-                        : Icons.dark_mode,
-                    color: buttonColor,
-                  ),
+              return Padding(
+                // Adjusted padding for alignment: 16 (standard) - 8 (IconButton internal) = 8
+                padding: const EdgeInsets.only(left: 8.0, right: 16.0, top: 8.0, bottom: 8.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    IconButton(
+                      tooltip: 'Cambiar tema (claro/oscuro)',
+                      onPressed: themeModeVM.toggleThemeMode,
+                      icon: Icon(
+                        themeModeVM.themeMode == ThemeMode.dark
+                            ? Icons.light_mode
+                            : Icons.dark_mode,
+                        color: itemColor,
+                      ),
+                    ),
+                    const SizedBox(width: 0.0), // Reduced width for closer spacing
+                    Text(
+                      'Theme',
+                      style: itemTextStyle, // Use the common itemTextStyle
+                    ),
+                  ],
                 ),
               );
             },
