@@ -3,8 +3,8 @@ import 'package:iranalytics/app/res/responsive.res.dart';
 import 'package:iranalytics/app/widgets/drawer_nav.widget.dart';
 import 'package:iranalytics/app/widgets/top_nav.widget.dart';
 
-class OpenAndCloseVowelsPage extends StatelessWidget {
-  const OpenAndCloseVowelsPage({super.key});
+class ClusteredColumnChartPage extends StatelessWidget {
+  const ClusteredColumnChartPage({super.key});
 
 
   @override
