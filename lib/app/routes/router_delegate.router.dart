@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart'; // Import for Scheduler Phase
 import 'package:iranalytics/app/pages/home.page.dart';
 // Ensure this import path is correct and the file defines ClusteredColumnChartPage
-import 'package:iranalytics/app/pages/exercises/clustered_column_chart.dart'; 
+import 'package:iranalytics/app/pages/exercises/references.dart';
 // If you have an Error404Page, ensure it's imported too, e.g.:
 // import 'package:iranalytics/app/pages/error404_page.dart'; 
 
