@@ -20,11 +20,13 @@ class _ClusteredColumnChartPageState extends State<ClusteredColumnChartPage> {
     super.initState();
     // Initialize the YouTube player controller with the video ID
     _ytController = YoutubePlayerController.fromVideoId(
-      videoId: '7EiWhIdL9zs',   // YouTube video ID for https://youtu.be/7EiWhIdL9zs
+      videoId: '9vvg9Tuik-M',   // YouTube video ID for https://youtu.be/7EiWhIdL9zs
       autoPlay: false,
       params: const YoutubePlayerParams(
         showControls: true,
         showFullscreenButton: true,
+        strictRelatedVideos: true,  // Only show videos from the same channel at end
+        showVideoAnnotations: false, // Hide pop-up annotations/end cards
       ),
     );
   }
@@ -66,7 +68,30 @@ class _ClusteredColumnChartPageState extends State<ClusteredColumnChartPage> {
                             .copyWith(fontFamily: 'ContrailOne', color: Colors.white),
                       ),
                     ),
-                    const SizedBox(height: 16.0),  // spacing between title and video
+                    const SizedBox(height: 40.0),  // spacing between title and video
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          style: (Theme.of(context).textTheme.bodyLarge ??
+                              const TextStyle(fontSize: 16.0))
+                              .copyWith(
+                            height: 1.5,
+                            color: Theme.of(context).textTheme.bodyLarge?.color
+                                ?? (Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.grey.shade300 : Colors.black87),
+                          ),
+                          children: const <TextSpan>[
+                            TextSpan(text: 'In this lesson we are going to learn how filter a dataset using a Pivot Table.'),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 40.0),  // bottom spacing
+
                     // **YouTube inline player widget:**
                     YoutubePlayer(
                       controller: _ytController,
@@ -74,7 +99,8 @@ class _ClusteredColumnChartPageState extends State<ClusteredColumnChartPage> {
                     ),
                     const SizedBox(height: 24.0),  // spacing between video and text
                     // Instructional text below the video
-                    Padding(
+
+                    /*Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: RichText(
                         textAlign: TextAlign.start,
@@ -107,6 +133,7 @@ class _ClusteredColumnChartPageState extends State<ClusteredColumnChartPage> {
                       ),
                     ),
                     const SizedBox(height: 40.0),  // bottom spacing
+                    */
                   ],
                 ),
               ),
