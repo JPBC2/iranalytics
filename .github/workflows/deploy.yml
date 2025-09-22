@@ -5,6 +5,11 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write   # allow pushing to gh-pages
+  pages: write      # allow publishing to GitHub Pages
+  id-token: write   # required by some GitHub Pages deployments
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
