@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart'; // Import for Scheduler Phase
 import 'package:iranalytics/app/pages/home.page.dart';
-// Ensure this import path is correct and the file defines ClusteredColumnChartPage
+// Ensure this import path is correct and the file defines ReferencesPage
 import 'package:iranalytics/app/pages/exercises/references.dart';
 // If you have an Error404Page, ensure it's imported too, e.g.:
 // import 'package:iranalytics/app/pages/error404_page.dart'; 
@@ -25,34 +25,34 @@ class AppRouterDelegate extends RouterDelegate<Uri>
     return Navigator(
       key: navigatorKey,
       pages: pages,
-      onPopPage: (route, result) {
-        if (!route.didPop(result)) {
-          return false;
-        }
-
-        // Check if the route being popped corresponds to the last page in our list
-        // and ensure there is a path to pop from.
-        if (pages.isNotEmpty && pages.last.name == route.settings.name) {
-          if (pages.length > 1) { // If it's not the very first page (HomePage)
+      onDidRemovePage: (Page<dynamic> page) {
+        // This callback is invoked after a page has been successfully removed by the Navigator.
+        // The 'pages' variable here is from the build method's scope,
+        // representing the list of pages based on _path before this pop is reflected in _path.
+        if (pages.isNotEmpty && pages.last.name == page.name) {
+          // The page removed by the Navigator was the one we considered to be at the top.
+          // Now, update _path to reflect this change.
+          if (pages.length > 1) { // If there was more than one page in the list
             _path = _path.replace(
-              pathSegments: _path.pathSegments.isNotEmpty 
+              pathSegments: _path.pathSegments.isNotEmpty
                   ? _path.pathSegments.sublist(0, _path.pathSegments.length - 1)
-                  : [], // Avoid error if pathSegments is already empty somehow
+                  : [], // Avoid error if pathSegments is already empty
             );
             // If pathSegments became empty, it implies we are back at the root path.
             if (_path.pathSegments.isEmpty) {
               _path = Uri.parse('/');
             }
           } else {
-            // Popping the last page (HomePage). Behavior depends on app design.
-            // For now, _path remains '/' if it was already, or becomes '/'.
-            // This part might need adjustment based on desired behavior for popping the root.
-             _path = Uri.parse('/');
+            // The only page in the list was popped (e.g., HomePage).
+            // _path should be Uri.parse('/')
+            _path = Uri.parse('/');
           }
+          _safeNotifyListeners();
         }
-        
-        _safeNotifyListeners();
-        return true;
+        // If pages.last.name != page.name, it implies a pop occurred that wasn't
+        // perfectly aligned with our _path logic. For robust handling,
+        // one might need to re-evaluate _path based on the remaining navigator stack,
+        // but the current translated logic mirrors the original's conditional update.
       },
     );
   }
@@ -77,11 +77,11 @@ class AppRouterDelegate extends RouterDelegate<Uri>
     if (path.pathSegments.isNotEmpty) {
       if (path.pathSegments.length == 2 &&
           path.pathSegments[0] == 'exercises' &&
-          path.pathSegments[1] == 'clustered-column-chart') {
+          path.pathSegments[1] == 'references') {
         pages.add(MaterialPage(
-          key: ValueKey('ClusteredColumnChartPage'), 
-          name: '/exercises/clustered-column-chart', // Set name for onPopPage comparison
-          child: ClusteredColumnChartPage(), // Corrected class name
+          key: ValueKey('ReferencesPage'), 
+          name: '/exercises/references', // Set name for onPopPage comparison
+          child: ReferencesPage(), // Corrected class name
         ));
       } else if (path.pathSegments.length == 1 && path.pathSegments[0] == 'content') {
         // Example for a hypothetical /content page

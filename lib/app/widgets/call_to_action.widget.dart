@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iranalytics/app/res/responsive.res.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// Assuming routerDelegate is globally accessible from main.dart or a similar setup.
-// If not, you'll need to pass it or access it via a Provider.
-import 'package:iranalytics/main.dart'; // This line assumes routerDelegate is in main.dart
+import 'package:iranalytics/main.dart';
 
 class CallToAction extends ConsumerWidget {
   const CallToAction({super.key});
@@ -12,7 +10,7 @@ class CallToAction extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color callToActionTextColor = Colors.white; // Simplified as it's always white in your code
-    final Color buttonTextColor = isDark ? Colors.white : Colors.black;
+    final Color buttonTextColor = isDark ? Colors.white : Colors.lightBlue.shade900; // Modified for light theme
 
     return Container(
       margin: const EdgeInsets.only(top: 40.0),
@@ -25,51 +23,51 @@ class CallToAction extends ConsumerWidget {
               : [Colors.lightBlue.shade900, Colors.cyanAccent.shade700],
         ),
       ),
-      height: 400,
+      constraints: const BoxConstraints(minHeight: 400.0), // Modified height to minHeight
       alignment: Alignment.center,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(
-            flex: 8,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                "Master real-world data science for International Relations",
-                style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                      color: callToActionTextColor,
-                      fontFamily: 'ContrailOne',
-                    ),
-                textAlign: TextAlign.center,
+      child: ConstrainedBox( // Added ConstrainedBox
+        constraints: const BoxConstraints(maxWidth: 650.0), // Set maxWidth
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              flex: 8,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  "Master data analysis for International Relations research.", // Master real-world data science / Qualitative and quantitative
+                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                        color: callToActionTextColor,
+                        fontFamily: 'ContrailOne',
+                      ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
-          ),
-          const Flexible(
-            flex: 2,
-            child: SizedBox.shrink(), // Using SizedBox.shrink() instead of empty Container
-          ),
-          Flexible(
-            flex: 1, // Consider adjusting flex or using SizedBox for better height control if needed
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                fixedSize: MediaQuery.of(context).size.width > ScreenSizes.md
-                    ? const Size(180, 50)
-                    : const Size(180, 70),
-              ),
-              onPressed: () {
-                // Use your routerDelegate instance to navigate
-                routerDelegate.go('/exercises/clustered-column-chart');
-              },
-              child: Text(
-                "Start",
-                style: TextStyle(
-                    color: buttonTextColor,
-                    fontSize: 16.5,
-                    fontFamily: 'ContrailOne'),
+            const SizedBox(height: 40.0), // Added spacing
+            Flexible(
+              flex: 1, // Consider adjusting flex or using SizedBox for better height control if needed
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  fixedSize: MediaQuery.of(context).size.width > ScreenSizes.md
+                      ? const Size(120, 56)
+                      : const Size(120, 56),
+                ),
+                onPressed: () {
+                  // Use your routerDelegate instance to navigate
+                  routerDelegate.go('/exercises/references');
+                },
+                child: Text(
+                  "Start",
+                  style: TextStyle(
+                      color: buttonTextColor,
+                      fontSize: 19,
+                      fontFamily: 'ContrailOne'),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

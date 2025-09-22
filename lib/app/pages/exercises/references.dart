@@ -6,14 +6,14 @@ import 'package:iranalytics/app/widgets/top_nav.widget.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'package:iranalytics/app/widgets/google_sheet_embed.widget.dart';
 
-class ClusteredColumnChartPage extends StatefulWidget {
-  const ClusteredColumnChartPage({super.key});
+class ReferencesPage extends StatefulWidget {
+  const ReferencesPage({super.key});
 
   @override
-  State createState() => _ClusteredColumnChartPageState();
+  State createState() => _ReferencesPageState();
 }
 
-class _ClusteredColumnChartPageState extends State {
+class _ReferencesPageState extends State {
   late final YoutubePlayerController _ytController;
 
   @override
@@ -21,7 +21,7 @@ class _ClusteredColumnChartPageState extends State {
     super.initState();
     // Initialize the YouTube player controller with the video ID
     _ytController = YoutubePlayerController.fromVideoId(
-      videoId: '9vvg9Tuik-M',   // YouTube video ID for https://youtu.be/7EiWhIdL9zs
+      videoId: 'iknH-T8brqY',   // YouTube video ID for https://youtu.be/iknH-T8brqY
       autoPlay: false,
       params: const YoutubePlayerParams(
         showControls: true,
@@ -61,7 +61,11 @@ class _ClusteredColumnChartPageState extends State {
                       textAlign: TextAlign.center,
                       style: (Theme.of(context).textTheme.displaySmall ??
                           const TextStyle(fontSize: 36.0, fontWeight: FontWeight.w400))
-                          .copyWith(fontFamily: 'ContrailOne', color: Colors.black),
+                          .copyWith(
+                            fontFamily: 'ContrailOne',
+                            color: Theme.of(context).textTheme.bodyLarge?.color ??
+                                (Theme.of(context).brightness == Brightness.dark
+                                ? Colors.grey.shade300 : Colors.black87),),
                     ),
 
                     const SizedBox(height: 40.0),  // spacing between title and video
@@ -127,7 +131,8 @@ class _ClusteredColumnChartPageState extends State {
                       'https://docs.google.com/spreadsheets/d/17Wf_PII8NzRaaFCkGGyUg_cIrlpwIr0WA1JtmYt3lIE/edit?usp=sharing&widget=true',
                       height: 500.0,
                     ),
-                    const SizedBox(height: 24.0), // spacing after the embedded sheet
+
+                    const SizedBox(height: 40.0), // spacing after the embedded sheet
 
                   ],
                 ),
