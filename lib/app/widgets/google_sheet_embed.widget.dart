@@ -24,7 +24,7 @@ class GoogleSheetEmbed extends StatelessWidget {
   const GoogleSheetEmbed({
     super.key,
     required this.sheetUrl,
-    this.height = 700.0,
+    this.height = 500.0 // Default
   });
 
   @override
