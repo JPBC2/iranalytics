@@ -43,14 +43,25 @@ class _ReferencesPageState extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          TopNav(),
-          // Constrain content width and enable scrolling
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1140),
-              child: SingleChildScrollView(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: kToolbarHeight, // Assuming TopNav uses standard AppBar height
+            collapsedHeight: kToolbarHeight,
+            toolbarHeight: kToolbarHeight,
+            flexibleSpace: TopNav(),
+            automaticallyImplyLeading: false, // Let TopNav handle its own leading icon (e.g., drawer)
+            titleSpacing: 0, // Remove default title spacing if TopNav fills the bar
+            title: const SizedBox.shrink(), // No default title, TopNav is the content
+            // backgroundColor: Colors.transparent, // Optional: if TopNav has its own background
+            // elevation: 0, // Optional: if TopNav handles its own shadow
+          ),
+          SliverToBoxAdapter(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1140),
+                // SingleChildScrollView is removed here as CustomScrollView handles scrolling
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -132,7 +143,7 @@ class _ReferencesPageState extends State {
                     GoogleSheetEmbed(
                       sheetUrl:
                       'https://docs.google.com/spreadsheets/d/17Wf_PII8NzRaaFCkGGyUg_cIrlpwIr0WA1JtmYt3lIE/edit?usp=sharing&widget=true',
-                      height: 850.0,
+                      height: 750.0,
                     ),
 
                     const SizedBox(height: 40.0), // spacing after the embedded sheet
@@ -183,7 +194,6 @@ class _ReferencesPageState extends State {
               ),
             ),
           ),
-          // drawer navigation etc. (unchanged)
         ],
       ),
       drawer: MediaQuery.of(context).size.width > ScreenSizes.md ? null : DrawerNav(),

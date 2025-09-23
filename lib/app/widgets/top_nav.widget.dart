@@ -17,7 +17,8 @@ class TopNav extends ConsumerWidget implements PreferredSizeWidget {
     final ThemeModeVM themeModeVM = ref.watch(themeModeProvider);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color buttonTextColor = isDark ? Colors.white : Colors.black;
-    final Color appBarColor = isDark ? Colors.grey.shade900 : Colors.white;
+    // Changed appBarColor to always be Colors.grey.shade50
+    final Color appBarColor = Colors.grey.shade50;
 
     // Language items for the popover
     final List<String> languageItems = ['Español'/*, 'Français', 'Русский', '中文', 'العربية'*/];
