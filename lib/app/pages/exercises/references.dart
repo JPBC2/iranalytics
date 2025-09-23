@@ -10,10 +10,9 @@ import 'package:iranalytics/app/widgets/google_sheet_embed.widget.dart';
 /// A page showing references and an exercise about cell references.
 ///
 /// This widget uses a `CustomScrollView` to allow the top navigation bar to stick
-/// at the top while scrolling through the page contents. On small screens
-/// (below the medium breakpoint defined in [ScreenSizes]), horizontal padding
-/// is applied to ensure the content doesn’t hug the left and right edges of
-/// the device.
+/// at the top while scrolling through the page contents. Horizontal padding is
+/// always applied to ensure the content doesn’t hug the left and right edges
+/// of the device, regardless of screen size.
 class ReferencesPage extends StatefulWidget {
   const ReferencesPage({super.key});
 
@@ -67,9 +66,8 @@ class _ReferencesPageState extends State {
           SliverToBoxAdapter(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final bool isSmall = constraints.maxWidth < ScreenSizes.xl;
-                // Add horizontal padding when screen width is smaller than the medium breakpoint.
-                final double horizontalPadding = isSmall ? 16.0 : 0.0;
+                // Always apply horizontal padding; previously this was conditional on screen width.
+                final double horizontalPadding = 16.0;
                 return Center(
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
@@ -157,7 +155,7 @@ class _ReferencesPageState extends State {
                           GoogleSheetEmbed(
                             sheetUrl:
                             'https://docs.google.com/spreadsheets/d/17Wf_PII8NzRaaFCkGGyUg_cIrlpwIr0WA1JtmYt3lIE/edit?usp=sharing&widget=true',
-                            height: 650.0,
+                            height: 750.0,
                           ),
 
                           const SizedBox(height: 40.0), // spacing after the embedded sheet
@@ -173,8 +171,8 @@ class _ReferencesPageState extends State {
                                   backgroundColor: WidgetStateProperty.resolveWith (
                                         (Set states) {
                                       return Theme.of(context).brightness == Brightness.dark
-                                          ? Colors.grey.shade900
-                                          : Colors.grey.shade50;
+                                          ? Colors.grey.shade800
+                                          : Colors.grey.shade200;
                                     },
                                   ),
                                 ),
