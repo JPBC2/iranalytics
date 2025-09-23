@@ -67,7 +67,7 @@ class _ReferencesPageState extends State {
           SliverToBoxAdapter(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final bool isSmall = constraints.maxWidth < ScreenSizes.md;
+                final bool isSmall = constraints.maxWidth < ScreenSizes.xl;
                 // Add horizontal padding when screen width is smaller than the medium breakpoint.
                 final double horizontalPadding = isSmall ? 16.0 : 0.0;
                 return Center(
