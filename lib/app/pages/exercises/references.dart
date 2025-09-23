@@ -173,7 +173,7 @@ class _ReferencesPageState extends State {
                                   backgroundColor: WidgetStateProperty.resolveWith (
                                         (Set states) {
                                       return Theme.of(context).brightness == Brightness.dark
-                                          ? Colors.grey.shade800
+                                          ? Colors.grey.shade900
                                           : Colors.grey.shade50;
                                     },
                                   ),
