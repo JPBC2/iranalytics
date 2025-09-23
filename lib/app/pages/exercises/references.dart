@@ -174,7 +174,7 @@ class _ReferencesPageState extends State {
                                         (Set states) {
                                       return Theme.of(context).brightness == Brightness.dark
                                           ? Colors.grey.shade800
-                                          : Colors.grey.shade200;
+                                          : Colors.grey.shade50;
                                     },
                                   ),
                                 ),
