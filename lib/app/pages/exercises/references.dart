@@ -155,7 +155,7 @@ class _ReferencesPageState extends State {
                           GoogleSheetEmbed(
                             sheetUrl:
                             'https://docs.google.com/spreadsheets/d/17Wf_PII8NzRaaFCkGGyUg_cIrlpwIr0WA1JtmYt3lIE/edit?usp=sharing&widget=true',
-                            height: 750.0,
+                            height: 580.0,
                           ),
 
                           const SizedBox(height: 40.0), // spacing after the embedded sheet

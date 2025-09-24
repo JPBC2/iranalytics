@@ -35,7 +35,7 @@ class CallToAction extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  "Master data analysis for International Relations research.", // Master real-world data science / Qualitative and quantitative
+                  "Quantitative analysis for International Relations research.", // Master real-world data science / Qualitative and quantitative
                   style: Theme.of(context).textTheme.displayMedium?.copyWith(
                         color: callToActionTextColor,
                         fontFamily: 'ContrailOne',
