@@ -46,11 +46,14 @@ class TopNav extends ConsumerWidget implements PreferredSizeWidget {
           color: buttonTextColor,
         ),
         // New Access button (matches drawer)
-        _navButton(
-          icon: Icons.person,
-          label: 'Access',
-          path: '/access', // Placeholder path, adjust if needed
-          color: buttonTextColor,
+        Tooltip(
+          message: 'This feature is in development.',
+          child: _navButton(
+            icon: Icons.person,
+            label: 'Access',
+            path: '/access', // Placeholder path, adjust if needed
+            color: buttonTextColor,
+          ),
         ),
         // New English Popover (matches drawer)
         Tooltip(
