@@ -41,6 +41,7 @@ dependencies:
   popover: any #^0.3.1
   youtube_player_iframe: ^5.2.2   # Plugin for inline YouTube player (supports Android, iOS, Web)
 
+  webview_flutter: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -45,15 +45,23 @@ class TopNav extends ConsumerWidget implements PreferredSizeWidget {
           path: '/content', // Assuming this is the correct general content path
           color: buttonTextColor,
         ),
-        // New Access button (matches drawer) with SnackBar functionality
+        // New Access button (matches drawer)
         Tooltip(
           message: 'This feature is in development.',
           child: _navButton(
             icon: Icons.person,
             label: 'Access',
+            path: '/access', // Placeholder path, adjust if needed
             color: buttonTextColor,
-            onPressed: () {
-              // Show a SnackBar to display the in-development message
+          ),
+        ),
+        // New English Popover (matches drawer) with tooltip and click message
+        Tooltip(
+          message: 'This feature is in development.',
+          child: PopupMenuButton<String>(
+            offset: const Offset(0, 35.0), // Adjusted offset for tighter spacing
+            onOpened: () {
+              // Show SnackBar when dropdown is opened
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('This feature is in development.'),
@@ -61,30 +69,28 @@ class TopNav extends ConsumerWidget implements PreferredSizeWidget {
                 ),
               );
             },
-          ),
-        ),
-        // New English Popover (matches drawer)
-        Tooltip(
-          message: 'Select Language',
-          child: PopupMenuButton<String>(
-            offset: const Offset(0, 35.0), // Adjusted offset for tighter spacing
-            child: InkWell(
-              onTap: null, // PopupMenuButton handles the tap to open.
-              hoverColor: Theme.of(context).hoverColor, // Match TextButton hover
-              borderRadius: BorderRadius.circular(4.0), // Optional: for rounded corners
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0), // Match _navButton padding
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.language_sharp, color: buttonTextColor, size: 20),
-                    const SizedBox(width: 6),
-                    Text('English', style: TextStyle(color: buttonTextColor)),
-                    Icon(Icons.arrow_drop_down, color: buttonTextColor, size: 20),
-                  ],
-                ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0), // Match _navButton padding
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4.0), // Optional: for rounded corners
+              ),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.language_sharp, color: buttonTextColor, size: 20),
+                  const SizedBox(width: 6),
+                  Text('English', style: TextStyle(color: buttonTextColor)),
+                  Icon(Icons.arrow_drop_down, color: buttonTextColor, size: 20),
+                ],
               ),
             ),
             onSelected: (String language) {
+              // Show a SnackBar to display the in-development message
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('This feature is in development.'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
               // Placeholder: Implement language change logic
               print('Selected language: $language');
               // Potentially: ref.read(languageProvider.notifier).setLanguage(language);
@@ -93,7 +99,10 @@ class TopNav extends ConsumerWidget implements PreferredSizeWidget {
               return languageItems.map((String language) {
                 return PopupMenuItem<String>(
                   value: language,
-                  child: Text(language),
+                  child: Tooltip(
+                    message: 'This feature is in development.',
+                    child: Text(language),
+                  ),
                 );
               }).toList();
             },
@@ -129,20 +138,19 @@ class TopNav extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
-  // Modified _navButton helper to accept optional onPressed callback
+  // _navButton helper remains the same as it's used for Content and Access
   Widget _navButton({
     required String label,
+    required String path,
     required Color color,
-    String? path,
     IconData? icon,
-    VoidCallback? onPressed,
   }) {
     return TextButton(
       style: TextButton.styleFrom(
           foregroundColor: color,
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0) // Consistent padding
       ),
-      onPressed: onPressed ?? () => routerDelegate.go(path!),
+      onPressed: () => routerDelegate.go(path),
       child: icon == null
           ? Text(label)
           : Row(

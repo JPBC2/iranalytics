@@ -12,13 +12,13 @@ class DrawerNav extends StatefulWidget {
 }
 
 class _DrawerNavState extends State<DrawerNav> {
-  int _expandedIndex = -1; // Keep for existing accordion if uncommented
+  final int _expandedIndex = -1; // Keep for existing accordion if uncommented
   late List<ExpansibleController> _tileControllers; // Keep for existing accordion
 
   // Controller for the language ExpansionTile
-  final ExpansionTileController _languageController = ExpansionTileController();
+  final ExpansibleController _languageController = ExpansibleController();
   // Controller for the new Content ExpansionTile
-  final ExpansionTileController _contentItemsController = ExpansionTileController();
+  final ExpansibleController _contentItemsController = ExpansibleController();
 
   final List<String> _languageItems = ['Español'/*, 'Français', 'Русский', '中文', 'العربية'*/];
   final List<String> _contentItems = ["Scatter plot", "Clustered column chart", "Area chart"];
