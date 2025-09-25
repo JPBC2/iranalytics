@@ -45,21 +45,27 @@ class TopNav extends ConsumerWidget implements PreferredSizeWidget {
           path: '/content', // Assuming this is the correct general content path
           color: buttonTextColor,
         ),
-        // New Access button (matches drawer)
+        // New Access button (matches drawer) with SnackBar functionality
         Tooltip(
           message: 'This feature is in development.',
           child: _navButton(
             icon: Icons.person,
             label: 'Access',
-            path: '/access', // Placeholder path, adjust if needed
             color: buttonTextColor,
+            onPressed: () {
+              // Show a SnackBar to display the in-development message
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('This feature is in development.'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            },
           ),
         ),
         // New English Popover (matches drawer)
         Tooltip(
           message: 'Select Language',
-
-
           child: PopupMenuButton<String>(
             offset: const Offset(0, 35.0), // Adjusted offset for tighter spacing
             child: InkWell(
@@ -75,13 +81,9 @@ class TopNav extends ConsumerWidget implements PreferredSizeWidget {
                     Text('English', style: TextStyle(color: buttonTextColor)),
                     Icon(Icons.arrow_drop_down, color: buttonTextColor, size: 20),
                   ],
-
-
                 ),
               ),
             ),
-
-
             onSelected: (String language) {
               // Placeholder: Implement language change logic
               print('Selected language: $language');
@@ -95,8 +97,6 @@ class TopNav extends ConsumerWidget implements PreferredSizeWidget {
                 );
               }).toList();
             },
-
-
           ),
         ),
         // New Theme Toggle (matches drawer)
@@ -129,19 +129,20 @@ class TopNav extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
-  // _navButton helper remains the same as it's used for Content and Access
+  // Modified _navButton helper to accept optional onPressed callback
   Widget _navButton({
     required String label,
-    required String path,
     required Color color,
+    String? path,
     IconData? icon,
+    VoidCallback? onPressed,
   }) {
     return TextButton(
       style: TextButton.styleFrom(
           foregroundColor: color,
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0) // Consistent padding
       ),
-      onPressed: () => routerDelegate.go(path),
+      onPressed: onPressed ?? () => routerDelegate.go(path!),
       child: icon == null
           ? Text(label)
           : Row(
