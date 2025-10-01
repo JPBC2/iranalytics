@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ThemeModeVM extends ChangeNotifier {
   final ThemeModeService _themeModeService;
   ThemeMode _themeMode = ThemeMode.system;
+
   ThemeModeVM(this._themeModeService) {
     loadThemeMode();
   }
@@ -18,12 +19,13 @@ class ThemeModeVM extends ChangeNotifier {
   }
 
   Future<void> toggleThemeMode() async {
-    _themeMode =
-    _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
     await _themeModeService.saveThemeMode(themeMode == ThemeMode.dark);
     notifyListeners();
   }
 }
 
-final themeModeProvider =
-ChangeNotifierProvider((_) => ThemeModeVM(ThemeModeService.instance));
+// Updated provider for Riverpod 3.x
+final themeModeProvider = ChangeNotifierProvider<ThemeModeVM>((ref) {
+  return ThemeModeVM(ThemeModeService.instance);
+});

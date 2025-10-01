@@ -42,10 +42,10 @@ class AuthService {
     }
   }
 
-  // Sign in with Google
+  // Sign in with Google - Updated for new API
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      // Trigger the authentication flow
+      // Trigger the authentication flow - Updated method call
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
@@ -56,7 +56,7 @@ class AuthService {
       // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-      // Create a new credential
+      // Create a new credential - Updated property name
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,

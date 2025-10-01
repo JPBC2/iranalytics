@@ -3,10 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/auth_service.dart';
 import '../providers/auth_providers.dart';
 
-class AuthViewModel extends StateNotifier<AsyncValue<void>> {
-  AuthViewModel(this._authService) : super(const AsyncValue.data(null));
+// Using Riverpod 3.x AsyncNotifier instead of StateNotifier
+class AuthViewModel extends AsyncNotifier<void> {
+  late AuthService _authService;
 
-  final AuthService _authService;
+  @override
+  Future<void> build() async {
+    _authService = ref.watch(authServiceProvider);
+    return;
+  }
 
   Future<void> signInWithGoogle() async {
     state = const AsyncValue.loading();
@@ -48,8 +53,7 @@ class AuthViewModel extends StateNotifier<AsyncValue<void>> {
   }
 }
 
-// Auth view model provider
-final authViewModelProvider = StateNotifierProvider<AuthViewModel, AsyncValue<void>>((ref) {
-  final authService = ref.watch(authServiceProvider);
-  return AuthViewModel(authService);
+// Auth view model provider using AsyncNotifierProvider
+final authViewModelProvider = AsyncNotifierProvider<AuthViewModel, void>(() {
+  return AuthViewModel();
 });

@@ -20,5 +20,16 @@ final currentAppUserProvider = FutureProvider<AppUser?>((ref) async {
   return authService.getCurrentAppUser();
 });
 
-// Auth loading state provider
-final authLoadingProvider = StateProvider<bool>((ref) => false);
+// Auth loading state provider - Updated for Riverpod 3.x
+final authLoadingProvider = NotifierProvider<AuthLoadingNotifier, bool>(() {
+  return AuthLoadingNotifier();
+});
+
+class AuthLoadingNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void setLoading(bool loading) {
+    state = loading;
+  }
+}
