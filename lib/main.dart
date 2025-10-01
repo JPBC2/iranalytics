@@ -25,12 +25,16 @@ void main() async {
 final routerDelegate = AppRouterDelegate();
 
 class MyApp extends StatelessWidget {
-  final _routeParser = AppRouteInformationParser();
+  // Remove the field declaration
+  // final _routeParser = AppRouteInformationParser();
 
-  const MyApp({super.key});
+  const MyApp({super.key}); // Keep const constructor
 
   @override
   Widget build(BuildContext context) {
+    // Create route parser here instead
+    final routeParser = AppRouteInformationParser();
+
     return Consumer(builder: (context, ref, child) {
       final themeModeVM = ref.watch(themeModeProvider);
       return AnimatedBuilder(
@@ -58,7 +62,7 @@ class MyApp extends StatelessWidget {
 
               // Comment out router temporarily
               // routerDelegate: routerDelegate,
-              // routeInformationParser: _routeParser,
+              // routeInformationParser: routeParser, // Use local variable
             );
           });
     });
