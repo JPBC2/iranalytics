@@ -85,14 +85,15 @@ class AuthService {
       }
 
       // Get authentication details from the GoogleSignInAccount
-      // In v7.0+, we get idToken from the account's authentication property
+      // In v7.0+, GoogleSignInAuthentication only contains idToken
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-      // For Firebase, we only need idToken (accessToken is optional for Firebase Auth)
-      // The idToken comes from googleAuth, not from authorization
+      // Firebase Auth only needs idToken for Google Sign-In authentication
+      // accessToken is not available in v7.0+ and not required for Firebase Auth
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
-        accessToken: googleAuth.accessToken, // This might be null, but that's okay for Firebase
+        // Note: accessToken is not available in google_sign_in 7.0+
+        // Firebase Auth can authenticate with just idToken
       );
 
       // Sign in to Firebase with the Google credential
