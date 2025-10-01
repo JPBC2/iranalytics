@@ -25,7 +25,7 @@ class ThemeModeVM extends ChangeNotifier {
   }
 }
 
-// Updated provider for Riverpod 3.x
+// Updated provider syntax for Riverpod 3.x compatibility
 final themeModeProvider = ChangeNotifierProvider<ThemeModeVM>((ref) {
   return ThemeModeVM(ThemeModeService.instance);
 });

@@ -5,15 +5,29 @@ import '../models/user_model.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'profile',
-      'https://www.googleapis.com/auth/spreadsheets',
-      'https://www.googleapis.com/auth/drive.file',
-    ],
-  );
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Google Sign-In instance (now singleton in v7.0+)
+  GoogleSignIn get _googleSignIn => GoogleSignIn.instance;
+
+  bool _isInitialized = false;
+
+  // Initialize Google Sign-In (required in v7.0+)
+  Future<void> _ensureGoogleSignInInitialized() async {
+    if (!_isInitialized) {
+      try {
+        await _googleSignIn.initialize(
+          // Optional: Add your client IDs here if needed
+          // clientId: 'your-client-id',
+          // serverClientId: 'your-server-client-id',
+        );
+        _isInitialized = true;
+      } catch (e) {
+        print('Failed to initialize Google Sign-In: $e');
+        throw AuthException('initialization_failed', 'Failed to initialize Google Sign-In');
+      }
+    }
+  }
 
   // Stream of auth state changes
   Stream<User?> get authStateChanges => _auth.authStateChanges();
@@ -42,24 +56,51 @@ class AuthService {
     }
   }
 
-  // Sign in with Google - Updated for new API
+  // Sign in with Google - Updated for v7.0+ API
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      // Trigger the authentication flow - Updated method call
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      // Ensure Google Sign-In is initialized
+      await _ensureGoogleSignInInitialized();
+
+      // Authenticate user (replaces signIn() in v7.0+)
+      GoogleSignInAccount? googleUser;
+
+      if (_googleSignIn.supportsAuthenticate()) {
+        googleUser = await _googleSignIn.authenticate(
+          scopeHint: [
+            'email',
+            'profile',
+            'https://www.googleapis.com/auth/spreadsheets',
+            'https://www.googleapis.com/auth/drive.file',
+          ],
+        );
+      } else {
+        // Fallback for platforms that don't support authenticate()
+        throw AuthException('unsupported_platform', 'Google Sign-In not supported on this platform');
+      }
 
       if (googleUser == null) {
         // User canceled the sign-in
         return null;
       }
 
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      // Get authorization for scopes (separate step in v7.0+)
+      final GoogleSignInClientAuthorization? authorization =
+      await googleUser.authorizationClient.authorizationForScopes([
+        'email',
+        'profile',
+        'https://www.googleapis.com/auth/spreadsheets',
+        'https://www.googleapis.com/auth/drive.file',
+      ]);
 
-      // Create a new credential - Updated property name
+      if (authorization == null) {
+        throw AuthException('authorization_failed', 'Failed to get authorization');
+      }
+
+      // Create Firebase credential using ID token
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+        accessToken: authorization.accessToken,
+        idToken: authorization.idToken,
       );
 
       // Sign in to Firebase with the Google credential
@@ -76,13 +117,14 @@ class AuthService {
       throw AuthException(e.code, e.message ?? 'Authentication failed');
     } catch (e) {
       print('Google Sign In Error: $e');
-      throw AuthException('google_signin_error', 'Failed to sign in with Google');
+      throw AuthException('google_signin_error', 'Failed to sign in with Google: $e');
     }
   }
 
   // Sign out
   Future<void> signOut() async {
     try {
+      await _ensureGoogleSignInInitialized();
       await Future.wait([
         _auth.signOut(),
         _googleSignIn.signOut(),

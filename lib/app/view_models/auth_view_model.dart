@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/auth_service.dart';
 import '../providers/auth_providers.dart';
 
-// Using Riverpod 3.x AsyncNotifier instead of StateNotifier
+// Updated for Riverpod 3.x - Using AsyncNotifier instead of StateNotifier
 class AuthViewModel extends AsyncNotifier<void> {
   late AuthService _authService;
 
@@ -53,7 +53,7 @@ class AuthViewModel extends AsyncNotifier<void> {
   }
 }
 
-// Auth view model provider using AsyncNotifierProvider
+// Auth view model provider using AsyncNotifierProvider for Riverpod 3.x
 final authViewModelProvider = AsyncNotifierProvider<AuthViewModel, void>(() {
   return AuthViewModel();
 });
