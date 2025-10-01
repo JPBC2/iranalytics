@@ -4,16 +4,22 @@ import 'app/routes/app_route_parser.router.dart';
 import 'app/routes/router_delegate.router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+// Import the splash page
+import 'app/pages/auth/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  /* await Firebase.initializeApp(
+
+  // Initialize Firebase
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-   );*/
+  );
+
   await Hive.initFlutter();
-  runApp(ProviderScope(child: MyApp()));
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 final routerDelegate = AppRouterDelegate();
@@ -21,7 +27,8 @@ final routerDelegate = AppRouterDelegate();
 class MyApp extends StatelessWidget {
   final _routeParser = AppRouteInformationParser();
 
-  MyApp({super.key});
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
@@ -29,10 +36,9 @@ class MyApp extends StatelessWidget {
       return AnimatedBuilder(
           animation: themeModeVM,
           builder: (context, child) {
-            return MaterialApp.router(
+            return MaterialApp(
               title: 'IR Analytics',
               debugShowCheckedModeBanner: false,
-
               theme: ThemeData(
                 colorScheme: ColorScheme.fromSeed(
                   seedColor: Colors.blue,
@@ -42,15 +48,17 @@ class MyApp extends StatelessWidget {
                 scaffoldBackgroundColor: Colors.white,
                 useMaterial3: true,
               ),
-
-
-
               darkTheme: ThemeData.dark().copyWith(
                 primaryColor: Colors.blue,
               ),
               themeMode: themeModeVM.themeMode,
-              routerDelegate: routerDelegate,
-              routeInformationParser: _routeParser,
+
+              // Use SplashPage as home instead of router for now
+              home: const SplashPage(),
+
+              // Comment out router temporarily
+              // routerDelegate: routerDelegate,
+              // routeInformationParser: _routeParser,
             );
           });
     });

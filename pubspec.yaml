@@ -40,8 +40,14 @@ dependencies:
   path_provider: any #^2.1.5
   popover: any #^0.3.1
   youtube_player_iframe: ^5.2.2   # Plugin for inline YouTube player (supports Android, iOS, Web)
-
   webview_flutter: any
+
+  # Firebase dependencies
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  google_sign_in: ^6.2.1
+  cloud_firestore: ^4.13.6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

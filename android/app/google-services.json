@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "672457909931",
+    "project_id": "iranalytics-3142e",
+    "storage_bucket": "iranalytics-3142e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672457909931:android:52812928ae40fb412ab9ee",
+        "android_client_info": {
+          "package_name": "com.iranalytics.iranalytics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "672457909931-p6aemkhflgl4gccpecd60test5l77htv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iranalytics.iranalytics",
+            "certificate_hash": "7b0a213c658919934fe571dcc4dfc31943bd72ee"
+          }
+        },
+        {
+          "client_id": "672457909931-4ksr531g0m3kiet6rn1mf9ae3vo8q2sj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGhe0RSecu5S1xRBtRfGOLH1OBjiZKZ7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "672457909931-4ksr531g0m3kiet6rn1mf9ae3vo8q2sj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "672457909931-30iqccnvsrduimlqq8r3u4pmjd9kd9rr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.iranalytics.iranalytics"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
