@@ -84,23 +84,15 @@ class AuthService {
         return null;
       }
 
-      // Get authorization for scopes (separate step in v7.0+)
-      final GoogleSignInClientAuthorization? authorization =
-      await googleUser.authorizationClient.authorizationForScopes([
-        'email',
-        'profile',
-        'https://www.googleapis.com/auth/spreadsheets',
-        'https://www.googleapis.com/auth/drive.file',
-      ]);
+      // Get authentication details from the GoogleSignInAccount
+      // In v7.0+, we get idToken from the account's authentication property
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-      if (authorization == null) {
-        throw AuthException('authorization_failed', 'Failed to get authorization');
-      }
-
-      // Create Firebase credential using ID token
+      // For Firebase, we only need idToken (accessToken is optional for Firebase Auth)
+      // The idToken comes from googleAuth, not from authorization
       final credential = GoogleAuthProvider.credential(
-        accessToken: authorization.accessToken,
-        idToken: authorization.idToken,
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken, // This might be null, but that's okay for Firebase
       );
 
       // Sign in to Firebase with the Google credential
