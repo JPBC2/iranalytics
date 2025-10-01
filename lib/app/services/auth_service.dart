@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import '../models/user_model.dart';
 
 class AuthService {
@@ -16,15 +17,21 @@ class AuthService {
   Future<void> _ensureGoogleSignInInitialized() async {
     if (!_isInitialized) {
       try {
-        await _googleSignIn.initialize(
-          // Optional: Add your client IDs here if needed
-          // clientId: 'your-client-id',
-          // serverClientId: 'your-server-client-id',
-        );
+        // For web, initialize without clientId (it's configured in HTML)
+        // For other platforms, you can add clientId if needed
+        if (kIsWeb) {
+          await _googleSignIn.initialize();
+        } else {
+          await _googleSignIn.initialize(
+            // For mobile platforms, you can specify clientId if needed
+            // clientId: 'your-client-id',
+            // serverClientId: 'your-server-client-id',
+          );
+        }
         _isInitialized = true;
       } catch (e) {
         print('Failed to initialize Google Sign-In: $e');
-        throw AuthException('initialization_failed', 'Failed to initialize Google Sign-In');
+        throw AuthException('initialization_failed', 'Failed to initialize Google Sign-In: $e');
       }
     }
   }
@@ -56,27 +63,48 @@ class AuthService {
     }
   }
 
-  // Sign in with Google - Updated for v7.0+ API
+  // Sign in with Google - Updated for v7.0+ API with web support
   Future<UserCredential?> signInWithGoogle() async {
     try {
       // Ensure Google Sign-In is initialized
       await _ensureGoogleSignInInitialized();
 
-      // Authenticate user (replaces signIn() in v7.0+)
       GoogleSignInAccount? googleUser;
 
-      if (_googleSignIn.supportsAuthenticate()) {
-        googleUser = await _googleSignIn.authenticate(
-          scopeHint: [
-            'email',
-            'profile',
-            'https://www.googleapis.com/auth/spreadsheets',
-            'https://www.googleapis.com/auth/drive.file',
-          ],
-        );
+      // Handle web platform differently (Google Sign-In 7.0+ requirement)
+      if (kIsWeb) {
+        // On web, we might need to use a different approach
+        // Web platform requires special handling in Google Sign-In 7.0+
+        try {
+          if (_googleSignIn.supportsAuthenticate()) {
+            googleUser = await _googleSignIn.authenticate(
+              scopeHint: [
+                'email',
+                'profile',
+              ],
+            );
+          } else {
+            throw AuthException('web_not_supported', 'Authentication not supported on web platform');
+          }
+        } catch (e) {
+          print('Web authentication error: $e');
+          // Fallback: try different approach for web
+          throw AuthException('web_auth_failed', 'Web authentication failed: $e');
+        }
       } else {
-        // Fallback for platforms that don't support authenticate()
-        throw AuthException('unsupported_platform', 'Google Sign-In not supported on this platform');
+        // Mobile platforms
+        if (_googleSignIn.supportsAuthenticate()) {
+          googleUser = await _googleSignIn.authenticate(
+            scopeHint: [
+              'email',
+              'profile',
+              'https://www.googleapis.com/auth/spreadsheets',
+              'https://www.googleapis.com/auth/drive.file',
+            ],
+          );
+        } else {
+          throw AuthException('unsupported_platform', 'Google Sign-In not supported on this platform');
+        }
       }
 
       if (googleUser == null) {
@@ -89,11 +117,9 @@ class AuthService {
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       // Firebase Auth only needs idToken for Google Sign-In authentication
-      // accessToken is not available in v7.0+ and not required for Firebase Auth
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
         // Note: accessToken is not available in google_sign_in 7.0+
-        // Firebase Auth can authenticate with just idToken
       );
 
       // Sign in to Firebase with the Google credential
